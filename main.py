@@ -1,3 +1,4 @@
+# main.py
 from operator import itemgetter
 import os
 
@@ -78,20 +79,7 @@ def retrieval_chain_without_lcel(query: str):
     return response.content
 
 def create_retrieval_chain_with_lcel():
-    """
-    Create a retrieval chain using LCEL (LangChain Expression Language).
-    Returns a chain that can be invoked with {"question": "..."}
-
-    Advantages over non-LCEL approach:
-    - Declarative and composable: Easy to chain operations with pipe operator (|)
-    - Built-in streaming: chain.stream() works out of the box
-    - Built-in async: chain.ainvoke() and chain.astream() available
-    - Batch processing: chain.batch() for multiple inputs
-    - Type safety: Better integration with LangChain's type system
-    - Less code: More concise and readable
-    - Reusable: Chain can be saved, shared, and composed with other chains
-    - Better debugging: LangChain provides better observability tools
-    """
+  
     retrieval_chain=(
         RunnablePassthrough.assign(
             context=itemgetter("question") | retriever | format_docs
