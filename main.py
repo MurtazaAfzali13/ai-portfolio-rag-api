@@ -38,13 +38,26 @@ vectorstore = PineconeVectorStore(
 retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
 
 prompt_template = ChatPromptTemplate.from_template(
-    """Answer the question based only on the following context:
+"""
+You are a personal AI assistant for Murtaza Afzali.
 
+Answer using ONLY the provided context.
+
+Important instructions:
+- Focus on the MOST relevant and important information
+- When possible, connect skills to real projects
+- If a project is mentioned in the context, include it in your answer
+- Avoid generic summaries
+- Make the answer feel personal and specific
+
+Context:
 {context}
 
-Question: {question}
+Question:
+{question}
 
-Provide a detailed answer:"""
+Answer:
+"""
 )
 
 
@@ -87,41 +100,24 @@ def create_retrieval_chain_with_lcel():
     return retrieval_chain
 
 
+
 if __name__ == "__main__":
-    print("Retrieving...")
+    print("Retrieving from Murtaza's Knowledge Base...")
 
-    query = "what is Pinecone in machine learning?"
+   
+    query = "What is Murtaza's expertise in AI and RAG?" 
+    # یا: "Tell me about his flagship video analysis project"
+    # یا: "What technologies does he use for frontend?"
 
-    # print("\n" + "=" * 70)
-    # print("IMPLEMENTATION 0: Raw LLM Invocation (No RAG)")
-    # print("=" * 70)
-
-    # result_raw = llm.invoke([HumanMessage(content=query)])
-    # print("\nAnswer:")
-    # print(result_raw.content)
-
-    # print("\n" + "=" * 70)
-    # print("IMPLEMENTATION 1: Without LCEL")
-    # print("=" * 70)
-
-    # result_without_lcel = retrieval_chain_without_lcel(query)
-    # print("\nAnswer:")
-    # print(result_without_lcel)
-
-     # ========================================================================
-    # Option 2: Use implementation WITH LCEL (Better Approach)
-    # ========================================================================
     print("\n" + "=" * 70)
-    print("IMPLEMENTATION 2: With LCEL - Better Approach")
+    print("AI PORTFOLIO CHATBOT: LCEL Implementation")
     print("=" * 70)
-    print("Why LCEL is better:")
-    print("- More concise and declarative")
-    print("- Built-in streaming: chain.stream()")
-    print("- Built-in async: chain.ainvoke()")
-    print("- Easy to compose with other chains")
-    print("- Better for production use")
-    print("=" * 70)
+    
     chain_with_lcel = create_retrieval_chain_with_lcel()
+    
+    # اجرای زنجیره با سوال مرتبط با تو
     result_with_lcel = chain_with_lcel.invoke({"question": query})
-    print("\nAnswer:")
+    
+    print(f"\nUser Question: {query}")
+    print("\nAI Answer:")
     print(result_with_lcel)

@@ -17,7 +17,11 @@ if __name__ == '__main__':
     documents = loader.load()
     
     print("Splitting...")
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    text_splitter = CharacterTextSplitter(
+    separator="=========================================", # بر اساس بخش‌های پورتفولیو
+    chunk_size=1000,
+    chunk_overlap=150  # ایجاد پیوستگی بین چانک‌ها
+    )
     texts = text_splitter.split_documents(documents)
     print(f"Created {len(texts)} chunks")
     
