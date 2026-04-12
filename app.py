@@ -1,13 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
+from typing import List, Dict, Any
 
-from main import create_retrieval_chain_with_lcel
+from rag import create_retrieval_chain_with_lcel
 
 app = FastAPI()
 
 # =========================
-# CORS (خیلی مهم)
+# CORS
 # =========================
 origins = [
     "http://localhost:3000",
@@ -31,14 +33,13 @@ chain = create_retrieval_chain_with_lcel()
 # Request Model
 # =========================
 class ChatRequest(BaseModel):
-    messages: list
+    messages: List[Dict[str, Any]]
 
 # =========================
-# Helper
+# Extract Question
 # =========================
-def extract_question(message: dict):
-
-    if "content" in message and message["content"]:
+def extract_question(message: dict) -> str | None:
+    if message.get("content"):
         return message["content"]
 
     if "parts" in message:
@@ -51,27 +52,50 @@ def extract_question(message: dict):
     return None
 
 # =========================
-# MAIN CHAT
+# Extract Answer from RAG
+# =========================
+def extract_answer(result: Any) -> str:
+    if isinstance(result, dict):
+        if "answer" in result:
+            return result["answer"]
+        if "result" in result:
+            return result["result"]
+        if "output" in result:
+            return result["output"]
+        return str(result)
+
+    if isinstance(result, str):
+        return result
+
+    return str(result)
+
+# =========================
+# MAIN CHAT ENDPOINT
 # =========================
 @app.post("/chat")
 async def chat(data: ChatRequest):
-    messages = data.messages
+    try:
+        messages = data.messages
 
-    user_messages = [
-        m for m in messages
-        if m.get("role") == "user"
-    ]
+        # گرفتن آخرین پیام کاربر
+        user_messages = [m for m in messages if m.get("role") == "user"]
 
-    if not user_messages:
-        return {"error": "No user message found"}
+        if not user_messages:
+            return PlainTextResponse("No user message found")
 
-    question = extract_question(user_messages[-1])
+        question = extract_question(user_messages[-1])
 
-    if not question:
-        return {"error": "Empty message"}
+        if not question:
+            return PlainTextResponse("Empty message")
 
-    result = chain.invoke({"question": question})
+        # اجرای RAG
+        result = chain.invoke({"question": question})
 
-    return {
-        "content": result
-    }
+        # استخراج پاسخ
+        answer = extract_answer(result)
+
+        # 🔥 مهم: فقط متن خام برگردان
+        return PlainTextResponse(answer)
+
+    except Exception as e:
+        return PlainTextResponse(f"Server error: {str(e)}")
