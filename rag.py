@@ -16,7 +16,7 @@ load_dotenv()
 print("Initializing components...")
 
 
-OPENROUTER_API_KEY = os.environ["OPENROUTER_API_KEY"]
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 
 embeddings = OpenAIEmbeddings(
@@ -32,8 +32,11 @@ llm = ChatOpenAI(
 )
 
 # 🔹 Pinecone
+INDEX_NAME = os.getenv("INDEX_NAME")
+
 vectorstore = PineconeVectorStore(
-    index_name=os.environ["INDEX_NAME"], embedding=embeddings
+    index_name=INDEX_NAME,
+    embedding=embeddings
 )
 
 retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
