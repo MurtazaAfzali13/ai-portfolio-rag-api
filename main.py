@@ -36,7 +36,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# RAG CHAIN
+
 missing_env = [key for key in ("OPENROUTER_API_KEY", "INDEX_NAME") if not os.getenv(key)]
 if missing_env:
     logger.error("Missing required environment variables at startup: %s", ", ".join(missing_env))
@@ -52,7 +52,6 @@ except Exception as e:
     chain = None
 
 
-# Request Models
 class Message(BaseModel):
     role: str
     content: str

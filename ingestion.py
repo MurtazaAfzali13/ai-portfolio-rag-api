@@ -1,4 +1,3 @@
-# ingestion.py
 import os
 from dotenv import load_dotenv
 from langchain_community.document_loaders import TextLoader
@@ -11,17 +10,18 @@ load_dotenv()
 if __name__ == '__main__':
     print("Ingesting...")
     
+    # اصلاح مسیر فایل به مسیر نسبی
     loader = TextLoader(
-        r"C:\Users\murtazaafzli\Desktop\langchain-course\mediumblog1.txt",
+        "mediumblog1.txt",
         encoding='utf-8'
     )
     documents = loader.load()
     
     print("Splitting...")
     text_splitter = CharacterTextSplitter(
-    separator="=========================================", # بر اساس بخش‌های پورتفولیو
-    chunk_size=1000,
-    chunk_overlap=150  # ایجاد پیوستگی بین چانک‌ها
+        separator="=========================================", # جداسازی بر اساس بخش‌های پورتفولیو
+        chunk_size=1000,
+        chunk_overlap=150
     )
     texts = text_splitter.split_documents(documents)
     print(f"Created {len(texts)} chunks")

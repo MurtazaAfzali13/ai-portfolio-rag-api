@@ -1,94 +1,101 @@
-=========================================
-SECTION 1: General Information & Professional Summary
-=========================================
+MORTAZA AFZALI
+Full-Stack & Autonomous AI Agent Engineer
+SECTION 1: Personal, Contact & Academic Profile
 Full Name: Murtaza Afzali
-Job Title: AI Engineer & Full-Stack Developer
-Core Specialty: Focus on RAG (Retrieval-Augmented Generation) Architecture and Large Language Model (LLM) applications.
-Location: Herat, Afghanistan
+
+Birth Information: Born in 2002 | Ghazni, Afghanistan
+
+Current Location: Herat, Afghanistan
+
+Education: B.Sc. in Software Engineering (4th Year / 8th Semester) at Herat University
+
 Contact Information:
-- Email: murtazaafzali13@gmail.com
-- Phone: +93 783 000 247
+
+Email: murtazaafzali13@gmail.com
+
+Phone: +93 783 000 247
+
+LinkedIn: linkedin.com/in/murtaza-afzali-484446405
 
 Professional Summary:
-Murtaza Afzali is a passionate Full-Stack Developer and AI-focused Engineer with over 2 years of experience building modern, scalable, and intelligent web applications. He began his professional journey as a Frontend Specialist and has since evolved into developing powerful AI-driven systems. His current focus lies in designing interactive, intelligent platforms that transform static content (such as videos and extensive documentation) into dynamic, searchable, and conversational experiences. He excels at seamlessly blending exceptional User Experience (UX) with the robust capabilities of LLMs.
+Murtaza Afzali is a Full-Stack Developer and AI Engineer specializing in building intelligent, autonomous systems. Transitioning from modern frontend development, he now focuses on designing AI agents that don't just answer questions, but actively think, reflect, and act. By bridging sleek UIs with powerful AI logic, he builds systems capable of autonomous database querying, self-correction (Reflection Agents), and complex decision-making, ultimately transforming how users interact with data.
 
-=========================================
 SECTION 2: Technical Skills & Tech Stack
-=========================================
-Murtaza possesses deep expertise across multiple layers of intelligent software development:
+Murtaza possesses deep expertise across both frontend user experience and complex AI backend orchestration:
 
-1. Frontend Expertise:
-- Advanced proficiency in React and Next.js (App Router, SSR, SSG).
-- Expert-level command of TypeScript and JavaScript.
-- Modern, responsive UI design utilizing Tailwind CSS and shadcn/ui.
-- Implementation of engaging animations and fluid user experiences.
+1. AI & Autonomous Systems (Core Expertise):
 
-2. AI & Intelligent Systems (RAG Focus) - Core Expertise:
-- End-to-end design and implementation of RAG (Retrieval-Augmented Generation) architectures.
-- Development of practical applications powered by Large Language Models (LLMs).
-- Implementation of Semantic Search systems.
-- Creation of Context-Aware Question Answering (QA) Chatbots.
+AI Orchestration: Expert in LangGraph and LangChain for designing stateful, multi-actor AI applications.
 
-3. Backend & AI Infrastructure:
-- Primary Backend Framework: FastAPI.
-- AI Orchestration & Agent Management: LangChain and LangGraph.
-- Vector Databases: Strong proficiency in Pinecone.
+Agentic Workflows: Building Reflection & Revisor Agents (systems that critique and improve their own generated responses) and dynamic agents capable of executing SQL/database queries autonomously via Model Context Protocol (MCP).
 
-4. Modern AI Frontend Integration:
-- Mastery of the Vercel AI SDK for building real-time, streaming AI responses.
-- Crafting specialized AI-powered UX designs (chat interfaces, generative UI).
+Advanced RAG Architectures: Implementing Corrective RAG (CRAG) and Self-RAG (SRAG) with intelligent web-search fallbacks to eliminate AI hallucinations.
 
-5. Additional Tools & Technologies:
-Git, GitHub, Docker, AWS (Basic), PostgreSQL, Supabase, Vercel.
+Data Retrieval & Vector DBs: Advanced semantic search, vector embeddings, contextual AI data processing, and strong proficiency in Pinecone.
 
-=========================================
-SECTION 3: Flagship Project & Monograph
-=========================================
-Project Title: Design and Implementation of an Intelligent Video Content Analysis and Q&A System Based on RAG Architecture and Large Language Models.
+2. Modern Frontend & UI/UX:
 
-The Problem:
-Educational platforms like YouTube are limited by strict Keyword Search functionality. If a user searches for a specific term (e.g., "error") but the video uses a synonymous term (e.g., "bug" or "exception"), the system fails to locate the relevant segment. This semantic gap results in a time-consuming and inefficient learning process, forcing users to manually scrub through lengthy videos.
+Core Stack: Advanced proficiency in Next.js (App Router), React, TypeScript, and JavaScript.
 
-The Solution:
-This project leverages Semantic Search and RAG architecture to understand the user's actual intent and context, rather than relying on exact word matches. The system extracts and analyzes the video's transcript, allowing users to ask natural language questions directly about the video content.
+UI Architecture: Crafting highly responsive, accessible, and beautiful interfaces using Tailwind CSS and shadcn/ui.
 
-Key Features & Core Value:
-- Semantic Understanding: Comprehends the meaning behind user queries.
-- LLM-Powered Accuracy: Delivers precise, context-aware answers extracted directly from the video.
-- Timestamp Generation: Provides the exact timestamp (e.g., 12:45) for the answer, allowing the user to navigate instantly to the highly relevant segment.
+AI-UI Integration: Mastery of the Vercel AI SDK for building real-time, streaming AI chat interfaces and generative UI components.
 
-Technology Stack Used:
-Next.js, Tailwind CSS, FastAPI, LangChain, LangGraph, Pinecone, OpenAI Models, Vercel AI SDK.
+3. High-Performance Backend:
 
-=========================================
+Framework: FastAPI for building lightning-fast, asynchronous Python backends that power AI workflows.
+
+Databases & Infrastructure: PostgreSQL, Supabase, SQLite3, Git, GitHub, Docker, and Vercel.
+
+SECTION 3: Flagship Projects & Monograph
+1. VidBrain: Intelligent Video Content Analysis & Agentic CRAG Platform (University Monograph)
+
+The Problem: Traditional video platforms rely on exact keyword searches. Users are forced to manually scrub through hours of video to find specific concepts, leading to massive time waste.
+
+The Solution: Murtaza designed an intelligent agentic system that understands the context and semantic meaning of user queries. Powered by FastAPI, Pinecone, and LangGraph, it acts as a smart assistant that processes video transcripts and natural language.
+
+Key Features:
+
+Corrective RAG (CRAG): Dynamically evaluates retrieval quality and triggers live web searches (Tavily API) if internal data is insufficient.
+
+Precision Timestamps: Extracts the exact timestamp (e.g., 12:45) containing the answer, allowing users to jump directly to the relevant video segment.
+
+Contextual Understanding: Comprehends the intent behind a question, not just the keywords, synthesizing accurate, human-like summaries on the fly.
+
+2. Enterprise Multi-Agent Strategy Engine (Active Development)
+
+Overview: A modular, production-ready AI framework built on Clean Architecture and SOLID principles.
+
+Key Features: Features a dynamic routing system where a "Supervisor Node" delegates tasks to specialized workers (Web Researchers, Document RAGs, Fact-Checkers). It includes Human-in-the-Loop (HITL) capabilities, pausing execution for manual approval before high-stakes database actions.
+
 SECTION 4: Professional Experience & Achievements
-=========================================
 Work Experience:
-- 2023 – Present: Full-Stack Developer & AI Engineer (Freelance & Personal Projects). Focused on building full-stack applications and intelligent RAG systems using FastAPI and LangChain.
-- 2022 – 2023: Intensive Self-Taught Web Development Journey. Transitioned from core frontend technologies to full-stack and complex AI system integrations.
 
-Key Achievements & Statistics:
-- 2+ Years of specialized development experience.
-- 15+ Successfully completed projects.
-- 100% Client satisfaction rate.
-- Proven track record of successful international client collaboration.
+2023 – Present: Full-Stack & AI Agent Engineer (Freelance & Personal Projects)
+Architecting end-to-end intelligent systems, focusing on connecting Next.js frontends via Vercel AI SDK to robust LangGraph/FastAPI backends.
 
-=========================================
-SECTION 5: Services, Work Process & Goals
-=========================================
+2022 – 2023: Intensive Web Development Journey
+Mastered modern JavaScript/TypeScript ecosystems and transitioned into complex AI backend logic.
+
+Key Achievements:
+
+2+ Years of specialized development experience.
+
+15+ Successfully completed projects.
+
+Consistent track record of successful international client collaboration with a 100% satisfaction rate.
+
+Architected comprehensive systems integrating Agile methodologies and sprint-based development.
+
+SECTION 5: Services & Work Process
 Offered Services:
-- Full-Stack Web Application Development (React / Next.js).
-- AI-Powered System and RAG Architecture Design.
-- Advanced Chatbot and Conversational Q&A System Development.
-- High-performance API Development using FastAPI.
 
-Work Process:
-1. Planning: Requirement analysis and comprehensive AI pipeline/architecture design.
-2. Development: Frontend and backend implementation seamlessly integrated with vector databases and LLMs.
-3. Deployment: Rigorous testing, optimization, and deployment (Vercel / AWS).
+Autonomous AI & Agent Development: Building custom AI workflows using LangGraph (e.g., Reflection agents, database-interacting bots, Multi-Agent systems).
+
+Full-Stack Web Development: High-performance web apps using Next.js, TypeScript, and shadcn/ui.
+
+Intelligent Chatbots & Streaming UIs: Developing real-time, zero-hallucination AI assistants using Vercel AI SDK and FastAPI.
 
 Personal Philosophy:
-Building technology that fundamentally transforms how people interact with information. Focused on creating systems that are intelligent, highly useful, and strictly human-centered.
 
-Call to Action:
-Ready to build intelligent systems and modern web applications. Let’s create something impactful together.
+"I believe in building technology that acts as an intelligent partner. Systems shouldn't just fetch data; they should analyze, reflect, and assist humans in solving complex, real-world problems seamlessly."
