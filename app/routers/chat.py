@@ -1,73 +1,47 @@
-# main.py
 import json
 import logging
-import os
 from typing import Any, AsyncGenerator, Dict, List, Optional
 
-from dotenv import load_dotenv
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, Request
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from pydantic import BaseModel
 
-load_dotenv()
+from app.graph.rag import run_pipeline
 
-from rag import get_components, run_pipeline  # noqa: E402
-
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-
-origins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "https://ai-portfolio-chat.vercel.app",
-]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+router = APIRouter(
+    prefix="/chat",
+    tags=["Chat"]
 )
-
-rag_ready = False
-try:
-    get_components()
-    rag_ready = True
-    logger.info("RAG components loaded successfully")
-except Exception as e:
-    logger.error("RAG startup failed: %s", e, exc_info=True)
-    logger.error("Verify OPENROUTER_API_KEY, INDEX_NAME, PINECONE_API_KEY and connectivity.")
-
 
 class Message(BaseModel):
     role: str
     content: str = ""
 
-
 class ChatRequest(BaseModel):
-    messages: List[Message]
+    messages: Optional[List[Message]] = None
+    question: Optional[str] = None
 
-
-def _clean_messages(messages: List[Message]) -> List[Dict[str, str]]:
-    cleaned = [
+def _clean_messages(data: ChatRequest) -> List[Dict[str, str]]:
+    raw = list(data.messages or [])
+    if not raw and data.question:
+        raw = [Message(role="user", content=data.question)]
+    return [
         {"role": "assistant" if m.role == "assistant" else "user", "content": m.content.strip()}
-        for m in messages
+        for m in raw
         if m.content and m.content.strip()
     ]
-    return cleaned
-
 
 def _line(event: Dict[str, Any]) -> str:
     return json.dumps(event, ensure_ascii=False) + "\n"
 
-
-@app.post("/chat/events")
-async def chat_events(data: ChatRequest):
+@router.post("/events")
+async def chat_events(data: ChatRequest, request: Request):
     """NDJSON stream of real pipeline events: stages, sources, tokens, done."""
-    messages = _clean_messages(data.messages)
+    messages = _clean_messages(data)
+    # خواندن وضعیت سیستم RAG از state اپلیکیشن
+    rag_ready = getattr(request.app.state, "rag_ready", False)
 
     async def generate() -> AsyncGenerator[str, None]:
         if not rag_ready:
@@ -85,11 +59,11 @@ async def chat_events(data: ChatRequest):
         headers={"Cache-Control": "no-cache, no-transform", "X-Accel-Buffering": "no"},
     )
 
-
-@app.post("/chat/stream")
-async def chat_stream(data: ChatRequest):
+@router.post("/stream")
+async def chat_stream(data: ChatRequest, request: Request):
     """Plain-text token stream (compat)."""
-    messages = _clean_messages(data.messages)
+    messages = _clean_messages(data)
+    rag_ready = getattr(request.app.state, "rag_ready", False)
 
     async def generate() -> AsyncGenerator[str, None]:
         if not rag_ready or not messages:
@@ -103,11 +77,12 @@ async def chat_stream(data: ChatRequest):
 
     return StreamingResponse(generate(), media_type="text/plain; charset=utf-8")
 
-
-@app.post("/chat")
-async def chat(data: ChatRequest):
+@router.post("/")
+async def chat(data: ChatRequest, request: Request):
     """Non-streaming answer (compat)."""
-    messages = _clean_messages(data.messages)
+    messages = _clean_messages(data)
+    rag_ready = getattr(request.app.state, "rag_ready", False)
+    
     if not rag_ready:
         return PlainTextResponse("RAG chain not available", status_code=503)
     if not messages:
@@ -120,16 +95,3 @@ async def chat(data: ChatRequest):
         elif event["type"] == "error":
             return PlainTextResponse(event["message"], status_code=500)
     return PlainTextResponse("".join(parts))
-
-
-@app.get("/health")
-async def health_check():
-    return {
-        "status": "healthy" if rag_ready else "degraded",
-        "rag_available": rag_ready,
-        "env": {
-            "OPENROUTER_API_KEY_set": bool(os.getenv("OPENROUTER_API_KEY")),
-            "INDEX_NAME_set": bool(os.getenv("INDEX_NAME")),
-            "PINECONE_API_KEY_set": bool(os.getenv("PINECONE_API_KEY")),
-        },
-    }
