@@ -1,6 +1,7 @@
 # app/core/security.py
 import os
 import sqlite3
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional, Set
@@ -30,7 +31,9 @@ _jwks_client: Optional[PyJWKClient] = (
 )
 
 security_scheme = HTTPBearer(auto_error=False)
-DB_PATH = Path("data/usage_limits.db")
+
+# سازگار با Vercel (/tmp) و ویندوز (Temp)
+DB_PATH = Path(tempfile.gettempdir()) / "usage_limits.db"
 
 
 def _init_db() -> None:
