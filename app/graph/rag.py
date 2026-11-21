@@ -16,15 +16,13 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-MAX_HISTORY = 6      # previous messages sent to the model
-FETCH_K = 8          # passages pulled from Pinecone
-FINAL_K = 4          # passages kept after ranking / de-duplication
+MAX_HISTORY = 6     
+FETCH_K = 8          
+FINAL_K = 4         
 MODEL_NAME = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini")
 
 
-# --------------------------------------------------------------------------- #
-# Setup
-# --------------------------------------------------------------------------- #
+
 def _build_openrouter_headers() -> dict:
     app_url = os.getenv("OPENROUTER_SITE_URL") or os.getenv("APP_URL") or "https://railway.app"
     app_name = os.getenv("OPENROUTER_APP_NAME") or "LangChain RAG API"
@@ -70,9 +68,6 @@ def get_components() -> Tuple[PineconeVectorStore, ChatOpenAI]:
     return vectorstore, llm
 
 
-# --------------------------------------------------------------------------- #
-# Prompts
-# --------------------------------------------------------------------------- #
 REWRITE_PROMPT = (
     "Rewrite the user's latest message as a standalone search question, resolving "
     "pronouns and references using the conversation. Keep the original language. "
@@ -101,10 +96,6 @@ Context
 {context}
 """
 
-
-# --------------------------------------------------------------------------- #
-# Helpers
-# --------------------------------------------------------------------------- #
 def _ms(start: float) -> int:
     return int((time.perf_counter() - start) * 1000)
 
@@ -151,9 +142,6 @@ async def _rewrite_question(llm: ChatOpenAI, history: List[Dict[str, str]], ques
         return question
 
 
-# --------------------------------------------------------------------------- #
-# Pipeline
-# --------------------------------------------------------------------------- #
 async def run_pipeline(messages: List[Dict[str, str]]) -> AsyncGenerator[Dict[str, Any], None]:
     t_total = time.perf_counter()
     try:
@@ -175,7 +163,6 @@ async def run_pipeline(messages: List[Dict[str, str]]) -> AsyncGenerator[Dict[st
             detail = "First message, no earlier context to resolve"
         yield _stage("understand", "done", detail, _ms(t))
 
-        # 2) Retrieve ---------------------------------------------------------
         t = time.perf_counter()
         yield _stage("retrieve", "start", "Embedding the query and searching Pinecone")
         results = await asyncio.to_thread(
@@ -188,7 +175,6 @@ async def run_pipeline(messages: List[Dict[str, str]]) -> AsyncGenerator[Dict[st
             detail = "No passages found"
         yield _stage("retrieve", "done", detail, _ms(t))
 
-        # 3) Rank -------------------------------------------------------------
         t = time.perf_counter()
         yield _stage("rank", "start", "Removing duplicates and ranking passages")
         seen, kept = set(), []

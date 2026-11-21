@@ -2,9 +2,11 @@ import json
 import logging
 from typing import Any, AsyncGenerator, Dict, List, Optional
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import PlainTextResponse, StreamingResponse
 from pydantic import BaseModel
+
+from app.core.security import enforce_user_quota
 
 from app.graph.rag import run_pipeline
 
@@ -37,11 +39,15 @@ def _line(event: Dict[str, Any]) -> str:
     return json.dumps(event, ensure_ascii=False) + "\n"
 
 @router.post("/events")
-async def chat_events(data: ChatRequest, request: Request):
+async def chat_events(
+    data: ChatRequest,
+    request: Request,
+    user_id: str = Depends(enforce_user_quota),  # <-- بررسی لاگین + سقف سهمیه
+):
     """NDJSON stream of real pipeline events: stages, sources, tokens, done."""
     messages = _clean_messages(data)
-    # خواندن وضعیت سیستم RAG از state اپلیکیشن
     rag_ready = getattr(request.app.state, "rag_ready", False)
+    logger.info("Authenticated chat request from user_id=%s", user_id)
 
     async def generate() -> AsyncGenerator[str, None]:
         if not rag_ready:
